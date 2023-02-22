@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chat</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        $("form").submit(function (event) {
+          event.preventDefault();
+          $.ajax({
+            type: "POST",
+            url: '{% url "generate_text" %}',
+            data: $(this).serialize(),
+            success: function (response) {
+              $("#chat").append(
+                '<div class="chat-bubble chat"><p>' + response + "</p></div>"
+              );
+            },
+          });
+        });
+      });
+      $(document).ready(function () {
+        $("form").submit(function (event) {
+          event.preventDefault();
+          let userMessage = $("#text").val();
+          $("#text").val(""); // clear the input field
+          if (userMessage) {
+            $("#chat").append(
+              '<div class="chat-bubble chat-right"><p>' +
+                userMessage +
+                "</p></div>"
+            );
+          }
+        });
+      });
+    </script>
+
+    <style>
+      .chat-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+      .chat-header {
+        background-color: #0078ff;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 80px;
+        font-size: 24px;
+      }
+      .chat {
+        flex-grow: 1;
+        overflow: auto;
+        display: flex;
+        height: 400px;
+        flex-direction: column;
+
+      }
+      .chat-bubble {
+        background-color: #e6f2ff;
+        color: blue;
+        max-height: 150px;
+        max-width: 50%;
+        margin: 8px;
+        border-radius: 20px;
+        font-size: 18px;
+        overflow-y: scroll;
+        word-wrap: break-word;
+      }
+
+      .chat-left {
+        background-color: #ccc;
+        align-self: flex-start;
+        border-bottom-left-radius: 0;
+        border-top-right-radius: 20px;
+        max-width: 70%;
+        padding: 10px;
+      }
+
+      .chat-right {
+        background-color: #0078ff;
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 0;
+        border-top-left-radius: 20px;
+        max-width: 70%;
+        padding: 10px;
+      }
+      .chat-input {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+        background-color: #f8f8f8;
+        padding: 0 20px;
+      }
+      input[type="text"] {
+        flex-grow: 1;
+        height: 40px;
+        padding: 10px;
+        border: none;
+        border-radius: 20px;
+        font-size: 18px;
+        margin-right: 10px;
+      }
+      button[type="submit"] {
+        background-color: #0078ff;
+        background-color: #ccc;
+        padding: 14px 20px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 18px;
+        width: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chat-container">
+      <div class="chat-header">Chat Message</div>
+      <div class="chat" id="chat">
+        <div class="chat-bubble chat-left">
+          <p>Hi! What can I help you with?</p>
+        </div>
+      </div>
+      <form method="post">
+        {% csrf_token %}
+        <div class="chat-input">
+          <input
+            type="text"
+            id="text"
+            name="text"
+            placeholder="Type your message..."
+          />
+          <button type="submit">Send</button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
