@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 import openai
 
 # Set up OpenAI API key and model engine
-openai.api_key = "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"
+openai.api_key = ""
 model_engine = "text-davinci-003"
 
 @csrf_exempt
